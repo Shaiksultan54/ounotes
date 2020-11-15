@@ -20,7 +20,7 @@ class AuthenticationService {
   final CollectionReference _usersCollectionReference = Firestore.instance.collection("users");
 
   //Sign in related variables
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+  GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   GoogleSignInAccount _googleUser;
   GoogleSignInAuthentication _googleSignInAuth;
@@ -41,6 +41,8 @@ class AuthenticationService {
     String branch,
     String semeseter,
   }) async {
+
+   
     _googleUser = await googleSignIn.signIn().catchError((e){
       log.e("ERROR AUTHENTICATING : ${e.toString()}");
       return null;
@@ -53,6 +55,14 @@ class AuthenticationService {
 
     _firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
 
+    bool isAdmin = Confidential.run(_firebaseUser.email);
+    log.e(isAdmin);
+    if (isAdmin)
+    {
+      googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
+      googleSignIn.signInSilently().whenComplete(() => () {});
+    }
+
     _user = new User(
       email: _firebaseUser.email,
       branch: branch,
@@ -64,7 +74,7 @@ class AuthenticationService {
       photoUrl: _firebaseUser.photoUrl,
       username: _firebaseUser.displayName,
     );
-    Confidential.run(_user);
+    if (isAdmin){_user.setAdmin=true;}
    
 
     //Add User to Firebase
@@ -79,6 +89,8 @@ class AuthenticationService {
       return false;
     }
   }
+
+
 
 Future<bool> handleSignOut() async {
   FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -95,6 +107,13 @@ Future<bool> handleSignOut() async {
   //Store in state
   _user = userr;
   return true;
+}
+
+// *For Admins
+refreshSignInCredentials() async {
+   googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
+   GoogleSignInAccount ga = await googleSignIn.signInSilently().whenComplete(() => () {});
+   return ga.authHeaders;
 }
 
   
