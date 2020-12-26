@@ -4,7 +4,6 @@ import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +81,7 @@ class NotesTileView extends StatelessWidget {
                         ? Shimmer.fromColors(
                             baseColor: Colors.teal,
                             highlightColor: Colors.white,
-                            child: notesColumnWidget(
+                            child: NotesColumnWidget(
                               refresh: refresh,
                               title: title,
                               primary: primary,
@@ -97,7 +96,7 @@ class NotesTileView extends StatelessWidget {
                               isPinned: isPinned,
                             ),
                           )
-                        : notesColumnWidget(
+                        : NotesColumnWidget(
                             refresh: refresh,
                             title: title,
                             primary: primary,
@@ -118,8 +117,8 @@ class NotesTileView extends StatelessWidget {
   }
 }
 
-class notesColumnWidget extends StatelessWidget {
-  const notesColumnWidget({
+class NotesColumnWidget extends StatelessWidget {
+  const NotesColumnWidget({
     Key key,
     @required this.title,
     @required this.primary,
@@ -218,6 +217,13 @@ class notesColumnWidget extends StatelessWidget {
                                       size: 18,
                                     )
                                   : SizedBox(),
+                              // model.isnotedownloaded
+                              //     ? Icon(
+                              //         Icons.done_all,
+                              //         color: theme.iconTheme.color,
+                              //         size: 18,
+                              //       )
+                              //     : SizedBox(),
                             ],
                           ),
                         ),

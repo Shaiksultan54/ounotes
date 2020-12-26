@@ -37,7 +37,7 @@ class NotesViewModel extends BaseViewModel {
   List<Download> downloadedNotes = [];
   ValueNotifier<List<Widget>> _notesTiles =
       new ValueNotifier(new List<Widget>());
-  
+
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
@@ -67,7 +67,7 @@ class NotesViewModel extends BaseViewModel {
   ValueNotifier<List<Widget>> get notesTiles => _notesTiles;
   bool isloading = false;
   bool get loading => isloading;
-  Box box ;
+  Box box;
   ValueNotifier<List<Vote>> get userVotesBySub => _voteService.votesBySub;
 
   setLoading(bool val) {
@@ -163,14 +163,14 @@ class NotesViewModel extends BaseViewModel {
   }
 
   getListOfNotesInDownloads(String subName) {
-    List<Download> allDownloads = _downloadService.downloadlist;
+    // List<Download> allDownloads = _downloadService.downloadlist;
     List<Download> downloadsbysub = [];
-    allDownloads.forEach((download) {
-      if (download.type == Constants.notes &&
-          download.subjectName.toLowerCase() == subName.toLowerCase()) {
-        downloadsbysub.add(download);
-      }
-    });
+    // allDownloads.forEach((download) {
+    //   if (download.type == Constants.notes &&
+    //       download.subjectName.toLowerCase() == subName.toLowerCase()) {
+    //     downloadsbysub.add(download);
+    //   }
+    // });
     return downloadsbysub;
   }
 
@@ -196,9 +196,6 @@ class NotesViewModel extends BaseViewModel {
 
   void openDoc(Note note) async {
     SharedPreferences prefs = await _sharedPreferencesService.store();
-    // prefs.remove("openDocChoice");
-    // print('yo');
-    // return;
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
       if (button == "Open In App") {
@@ -213,13 +210,14 @@ class NotesViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-      description: "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
+      description:
+          "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );
     if(response == null)return;
     log.i("openDoc BottomSheetResponse ");
-    if (!response.confirmed??false){
+    if (!response.confirmed ?? false) {
       return;
     }
 
@@ -260,7 +258,29 @@ class NotesViewModel extends BaseViewModel {
         arguments: WebViewWidgetArguments(note: note));
   }
 
-  //download doc on tap
+  void navigateBack() {
+    _navigationService.popRepeated(1);
+  }
+
+  @override
+  void dispose() {
+    this.admobService.hideNotesViewBanner();
+    this.admobService.hideNotesViewInterstitialAd();
+    super.dispose();
+  }
+
+  void incrementViewForAd() {
+    this.admobService.incrementNumberOfTimeNotesOpened();
+    if (this.admobService.shouldAdBeShown()) {
+      this.admobService.showNotesViewInterstitialAd();
+    }
+  }
+
+  List<Subject> getSimilarSubjects(String subjectName) {
+    return _subjectsService.getSimilarSubjects(subjectName);
+  }
+
+   //download doc on tap
   void onTap({
     String notesName,
     String subName,
@@ -338,38 +358,17 @@ class NotesViewModel extends BaseViewModel {
     }
   }
 
-  void navigateBack() {
-    _navigationService.popRepeated(1);
-  }
-
-  @override
-  void dispose() {
-    this.admobService.hideNotesViewBanner();
-    this.admobService.hideNotesViewInterstitialAd();
-    super.dispose();
-  }
-
-  void incrementViewForAd() {
-    this.admobService.incrementNumberOfTimeNotesOpened();
-    if (this.admobService.shouldAdBeShown()) {
-      this.admobService.showNotesViewInterstitialAd();
-    }
-  }
-
-  List<Subject> getSimilarSubjects(String subjectName) {
-    return _subjectsService.getSimilarSubjects(subjectName);
-  }
-
-  Widget _addInkWellWidget(Note note,{bool notification=false,bool isPinned=false}) {
+  Widget _addInkWellWidget(Note note,
+      {bool notification = false, bool isPinned = false}) {
     return InkWell(
       child: NotesTileView(
-          note: note,
-          votes: _voteService.votesBySub.value,
-          downloadedNotes: getListOfNotesInDownloads(note.subjectName),
-          notification:notification,
-          isPinned:isPinned,
-          refresh:refresh,
-        ),
+        note: note,
+        votes: _voteService.votesBySub.value,
+        downloadedNotes: getListOfNotesInDownloads(note.subjectName),
+        notification: notification,
+        isPinned: isPinned,
+        refresh: refresh,
+      ),
       onTap: () {
         incrementViewForAd();
         openDoc(note);
