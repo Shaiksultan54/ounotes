@@ -11,6 +11,7 @@ class LinksViewModel extends BaseViewModel {
   List<Link> _links = [];
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   NavigationService _navigationService = locator<NavigationService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   List<Link> get linksList => _links;
   bool isloading = false;
@@ -23,7 +24,11 @@ class LinksViewModel extends BaseViewModel {
 
   Future fetchLinks(String subjectName) async {
     setBusy(true);
-    _links = await _firestoreService.loadLinksFromFirebase(subjectName);
+    try {
+      _links = await _firestoreService.loadLinksFromFirebase(subjectName);
+    }catch (e) {
+      await _bottomSheetService.showBottomSheet(title: "Oops !",description: "Looks like you're facing an error. Make sure to let us know by using the 'feedback' option in the drawer.\nError:${e.toString()}\n");
+    }
     notifyListeners();
     setBusy(false);
   }

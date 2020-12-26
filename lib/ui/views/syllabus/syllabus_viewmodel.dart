@@ -45,8 +45,14 @@ class SyllabusViewModel extends BaseViewModel {
 
   Future fetchSyllabus(String subjectName) async {
     setBusy(true);
-    _syllabus = await _firestoreService.loadSyllabusFromFirebase(subjectName);
-    await _downloadService.fetchAndSetDownloads();
+    try {
+
+      _syllabus = await _firestoreService.loadSyllabusFromFirebase(subjectName);
+      await _downloadService.fetchAndSetDownloads();
+      
+    } catch (e) {
+      await _bottomSheetService.showBottomSheet(title: "Oops !",description: "Looks like you're facing an error. Make sure to let us know by using the 'feedback' option in the drawer.\nError:${e.toString()}\n");
+    }
     notifyListeners();
     setBusy(false);
   }

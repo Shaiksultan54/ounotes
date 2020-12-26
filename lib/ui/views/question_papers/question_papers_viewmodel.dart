@@ -42,22 +42,28 @@ class QuestionPapersViewModel extends BaseViewModel {
 
   Future fetchQuestionPapers(String subjectName) async {
     setBusy(true);
-    await _downloadService.fetchAndSetDownloads();
-    List<Download> allDownloads = _downloadService.downloadlist;
-    allDownloads.forEach((download) {
-      if (download.type == Constants.questionPapers) {
-        downloadedQp.add(download);
+    try {
+
+      await _downloadService.fetchAndSetDownloads();
+      List<Download> allDownloads = _downloadService.downloadlist;
+      allDownloads.forEach((download) {
+        if (download.type == Constants.questionPapers) {
+          downloadedQp.add(download);
+        }
+      });
+      var result =
+          await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
+      if (result is String) {
+        _dialogService.showDialog(
+            title: "Error",
+            description: "Error in loading documents " + "$result");
+        setBusy(false);
+      } else {
+        _questionPapers = result;
       }
-    });
-    var result =
-        await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
-    if (result is String) {
-      _dialogService.showDialog(
-          title: "Error",
-          description: "Error in loading documents " + "$result");
-      setBusy(false);
-    } else {
-      _questionPapers = result;
+
+    } catch (e) {
+      await _bottomSheetService.showBottomSheet(title: "Oops !",description: "Looks like you're facing an error. Make sure to let us know by using the 'feedback' option in the drawer.\nError:${e.toString()}\n");
     }
     notifyListeners();
     setBusy(false);

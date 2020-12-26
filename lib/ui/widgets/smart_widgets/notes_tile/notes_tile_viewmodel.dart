@@ -297,8 +297,8 @@ class NotesTileViewModel extends BaseViewModel {
   void pinNotes(Note note,Function refresh) {
 
     //Initialize and fetch pinned notes
-    Map<String,Map<String,DateTime>> pinnedNotes = _subjectService.documentHiveBox.get("pinnedNotes") ?? {"empty":{}};
-    Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName] ?? {};
+    Map<String,Map> pinnedNotes = new Map<String,Map>.from(_subjectService.documentHiveBox.get("pinnedNotes") ?? {"empty":{}});
+    Map subjectPinnedNotes = pinnedNotes[note.subjectName] ?? {};
 
     //add the pinned notes
     subjectPinnedNotes[note.id.toString()] = DateTime.now();
@@ -318,9 +318,9 @@ class NotesTileViewModel extends BaseViewModel {
   void unpinNotes(Note note,Function refresh) {
 
     //Initialize and fetch pinned notes
-    Map<String,Map<String,DateTime>> pinnedNotes = _subjectService.documentHiveBox.get("pinnedNotes");
+    Map<String,Map> pinnedNotes = new Map<String,Map>.from(_subjectService.documentHiveBox.get("pinnedNotes"));
     if(pinnedNotes == null)return;
-    Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName];
+    Map subjectPinnedNotes = pinnedNotes[note.subjectName];
     if(subjectPinnedNotes == null || subjectPinnedNotes.isEmpty)return;
 
     //remove pinned notes

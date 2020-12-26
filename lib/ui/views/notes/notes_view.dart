@@ -1,8 +1,6 @@
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/similar_subjects_tile.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
-import 'package:adcolony/adcolony.dart';
-import 'package:adcolony/banner.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
