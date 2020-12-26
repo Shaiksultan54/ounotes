@@ -27,3 +27,13 @@ but then 2 papers may cause collision to title == year , and the collision will 
         - Upload Screen to enter data
         - The model itself
         - The view where the document is being shown
+
+
+
+
+to do after all subjects updated
+ 
+        -Change & to "and"
+        -All lowercase to uppercase
+        -verify semseters and branches
+        -check duplicates
