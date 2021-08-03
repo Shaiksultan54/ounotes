@@ -36,6 +36,7 @@
 # Web related
 lib/generated_plugin_registrant.dart
 web/config.js
+web/index.html
 
 # Symbolication related
 app.*.symbols
