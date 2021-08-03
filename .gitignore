@@ -30,6 +30,7 @@
 .pub-cache/
 .pub/
 /build/
+/web/index.html
 
 
 # Web related
