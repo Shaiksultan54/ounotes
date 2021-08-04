@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:html' as dartHtml;
 import 'dart:io';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
@@ -465,13 +467,17 @@ class NotesViewModel extends BaseViewModel {
       },
       onDownloadedCallback: (path, fileName) async {
         setLoading(false);
-        await _notificationService.dispatchLocalNotification(
-            NotificationService.download_purchase_notify, {
-          "title": "Downloaded " + fileName,
-          "body":
-              "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
-          "payload": {"path": path, "id": note.id},
-        });
+        //FIXME WEB
+        if(kIsWeb){// generated somewhere
+        }else{
+          await _notificationService.dispatchLocalNotification(
+              NotificationService.download_purchase_notify, {
+            "title": "Downloaded " + fileName,
+            "body":
+                "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
+            "payload": {"path": path, "id": note.id},
+          });
+        }
         User user = await _authenticationService.getUser();
         user.addDownload("${note.subjectId}_${note.id}");
         _navigationService.navigateTo(Routes.thankYouView,

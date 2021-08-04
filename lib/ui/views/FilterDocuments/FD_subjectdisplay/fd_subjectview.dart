@@ -3,7 +3,6 @@ import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectv
 import 'package:FSOUNotes/ui/widgets/smart_widgets/FilterSubjects_view/filtersubjects_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/default_app_bar/back_icon_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 
 class FDSubjectView extends StatelessWidget {

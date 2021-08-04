@@ -6,11 +6,12 @@ import 'package:FSOUNotes/ui/views/Settings/settings_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wiredash/wiredash.dart';
@@ -166,8 +167,8 @@ class _SettingsViewState extends State<SettingsView> {
                         onPressed: () async {
                           await model.getPackageInfo();
                           Wiredash.of(context).setBuildProperties(
-                            buildNumber: model.packageInfo.version,
-                            buildVersion: model.packageInfo.buildNumber,
+                            buildNumber: model.packageInfo?.version ?? "",
+                            buildVersion: model.packageInfo?.buildNumber ?? "",
                           );
                           Wiredash.of(context).setUserProperties(
                             userEmail: await model.getUserEmail(),
@@ -192,6 +193,7 @@ class _SettingsViewState extends State<SettingsView> {
                         title: "Account Settings",
                         subTitle: "Change your semeter, branch etc.",
                       ),
+                      if(!kIsWeb)
                       SettingsTile(
                         isClickable: true,
                         onPressed: () {

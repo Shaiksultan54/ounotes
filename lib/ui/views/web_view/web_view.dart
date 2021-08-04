@@ -10,7 +10,7 @@ import 'package:FSOUNotes/ui/views/web_view/web_view_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 

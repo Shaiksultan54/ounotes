@@ -9,6 +9,7 @@ import 'package:FSOUNotes/services/funtional_services/push_notification_service.
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/ui/shared/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -193,7 +194,7 @@ class AuthenticationService {
     _analyticsService.setUserProperty(name: 'username', value: _user.username);
     _analyticsService.analytics.setUserId(_user.id);
     bool shouldSubscribe = await _askForPermissionToSubscribeToFcmTopic();
-    if (shouldSubscribe ?? false) {
+    if ((shouldSubscribe ?? false) && !kIsWeb) {
     //*Present fcm topics user wants to subscribe
       var user_semester = CourseInfo.semesterToNumber[_user.semester];
       var user_branch = _user.branch;
@@ -226,9 +227,10 @@ class AuthenticationService {
       "email": _user.email,
       "username": _user.username,
     };
+    if(!kIsWeb){
     OneSignal.shared.sendTags(tags);
     OneSignal.shared.setEmail(email: _user.email);
-    OneSignal.shared.setExternalUserId(_user.id);
+    OneSignal.shared.setExternalUserId(_user.id);}
   }
 
   void _handleAuthError(var e) {

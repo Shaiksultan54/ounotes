@@ -57,8 +57,8 @@ class SplashViewModel extends FutureViewModel {
     PackageInfo packageInfo = await _appInfoService.getPackageInfo();
     String updatedVersion =
         _remoteConfigService.remoteConfig.getString('APP_VERSION');
-    String version = packageInfo.version;
-    String buildNumber = packageInfo.buildNumber;
+    String version = packageInfo?.version ?? "";
+    String buildNumber = packageInfo?.buildNumber ?? "";
     String currentVersion = "$version $buildNumber";
     log.i("Updated Version :" + updatedVersion);
     log.i("Current Version :" + currentVersion);

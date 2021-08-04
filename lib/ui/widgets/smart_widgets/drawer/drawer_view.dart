@@ -10,7 +10,7 @@ import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intro/flutter_intro.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:wiredash/wiredash.dart';
@@ -198,8 +198,9 @@ class _DrawerViewState extends State<DrawerView> {
                               // model.dispatchEmail();
                               await model.getPackageInfo();
                               Wiredash.of(context).setBuildProperties(
-                                buildNumber: model.packageInfo.version,
-                                buildVersion: model.packageInfo.buildNumber,
+                                buildNumber: model?.packageInfo?.version ?? "",
+                                buildVersion:
+                                    model?.packageInfo?.buildNumber ?? "",
                               );
                               Wiredash.of(context).setUserProperties(
                                 userEmail: await model.getUserEmail(),
@@ -215,13 +216,13 @@ class _DrawerViewState extends State<DrawerView> {
                             //     subtitle1,
                             //     model.navigateToAdminUploadScreen,
                             //     Document.Drawer),
-                          if (model.isVerifier)
-                            NavItem(
-                                Icons.account_balance,
-                                "Verifier Panel",
-                                subtitle1,
-                                model.navigateToVerifierPanelScreen,
-                                Document.Drawer),
+                            if (model.isVerifier)
+                              NavItem(
+                                  Icons.account_balance,
+                                  "Verifier Panel",
+                                  subtitle1,
+                                  model.navigateToVerifierPanelScreen,
+                                  Document.Drawer),
                           Divider(color: Colors.grey.shade600),
                           Row(children: <Widget>[
                             SizedBox(width: 20),

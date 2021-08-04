@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:wiredash/wiredash.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app/app.locator.dart';
 import 'app/app.logger.dart';
@@ -29,6 +30,7 @@ Logger log = getLogger("main");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await dotenv.load(fileName:".env");
   //Dynamic Injection
   setupLocator();
   //Setting custom Bottom Sheet
@@ -44,7 +46,7 @@ void main() async {
   await Hive.openBox(Constants.ouNotes);
   await Hive.openBox<Download>(Constants.downloads);
   await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
-  // RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
   // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
@@ -53,7 +55,7 @@ void main() async {
   // locator<GoogleInAppPaymentService>();
   // await _inAppPaymentService.fetchData();
 
-  // await _remoteConfigService.init();
+  await _remoteConfigService.init();
 
   // await _admobService.init();
   //Sentry provides crash reporting
@@ -164,12 +166,15 @@ class MyApp extends StatelessWidget {
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => FeatureDiscovery(
         child: Wiredash(
-          projectId: "Sometid",
-          secret: "sdsdsd",
-          // projectId: _remoteConfigService.remoteConfig
-          //     .getString("WIREDASH_PROJECT_ID"),
-          // secret:
-          //     _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
+          projectId:
+          kIsWeb
+          ? dotenv.env["WIREDASH_PROJECT_ID"]
+          : _remoteConfigService.remoteConfig
+              .getString("WIREDASH_PROJECT_ID"),
+          secret:
+          kIsWeb
+          ? dotenv.env["WIREDASH_SECRET"]
+          : _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
           navigatorKey: StackedService.navigatorKey,
           child: ThemeProvider(
             initTheme: AppStateNotifier.isDarkModeOn

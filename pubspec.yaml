@@ -48,7 +48,7 @@ dependencies:
   cuid: ^0.1.2
   file_picker: ^3.0.3
   flutter_full_pdf_viewer: ^1.0.6
-  flutter_dotenv: ^4.0.0-nullsafety.0
+  flutter_dotenv: ^5.0.0
   flutter_mailer: ^2.0.0-null-safe
   flutter_secure_storage: ^4.1.0
   flutter_typeahead: ^3.1.1
@@ -61,7 +61,7 @@ dependencies:
   package_info: ^2.0.0
   path_provider: ^2.0.1
   permission_handler: ^7.0.0
-  share: ^2.0.1
+  share_plus: ^2.1.4
   connection_verify: ^1.0.4
   flutter_windowmanager: ^0.0.2
   disable_screenshots: ^0.1.0

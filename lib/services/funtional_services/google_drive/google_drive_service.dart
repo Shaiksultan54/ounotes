@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'dart:html' as dartHtml;
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/document.dart';
@@ -19,6 +21,7 @@ import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:ext_storage/ext_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mime/mime.dart';
 import 'package:pdf_compressor/pdf_compressor.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -42,6 +45,7 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:googleapis/drive/v3.dart' as ga;
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 // All top level Variables and Serivces needed are stored in this file
 // For specific functions explore the files below
@@ -198,8 +202,10 @@ class GoogleDriveService {
 
       try {
         //>> 1.5.1 initialize http client and GDrive API
-        final accountCredentials = new ServiceAccountCredentials.fromJson(
-            _remote.remoteConfig.getString("GDRIVE"));
+        dynamic jsonKey = kIsWeb
+        ? dotenv.env['GDRIVE']
+        : _remote.remoteConfig.getString("GDRIVE");
+        final accountCredentials = new ServiceAccountCredentials.fromJson(jsonKey);
         final scopes = ['https://www.googleapis.com/auth/drive'];
         AutoRefreshingAuthClient gdriveAuthClient =
             await clientViaServiceAccount(accountCredentials, scopes);
@@ -263,8 +269,10 @@ class GoogleDriveService {
     try {
       log.e("File being deleted");
       // initialize http client and GDrive API
-      final accountCredentials = new ServiceAccountCredentials.fromJson(
-          _remote.remoteConfig.getString("GDRIVE"));
+      dynamic jsonKey = kIsWeb
+      ? dotenv.env['GDRIVE']
+      : _remote.remoteConfig.getString("GDRIVE");
+      final accountCredentials = new ServiceAccountCredentials.fromJson(jsonKey);
       final scopes = ['https://www.googleapis.com/auth/drive'];
 
       AutoRefreshingAuthClient gdriveAuthClient =
@@ -283,6 +291,7 @@ class GoogleDriveService {
       {@required Note note,
       @required onDownloadedCallback,
       @required startDownload}) async {
+        log.e("File being Downloaded from GDrive");
     try {
       log.e(note.toJson());
       //*If file exists, avoid downloading again
@@ -299,26 +308,19 @@ class GoogleDriveService {
       startDownload();
 
       //*Google Drive Set Up
-      final accountCredentials = new ServiceAccountCredentials.fromJson(
-          _remote.remoteConfig.getString("GDRIVE"));
+      dynamic jsonKey = kIsWeb
+      ? dotenv.env['GDRIVE']
+      : _remote.remoteConfig.getString("GDRIVE");
+      final accountCredentials = new ServiceAccountCredentials.fromJson(jsonKey);
       final scopes = ['https://www.googleapis.com/auth/drive'];
       AutoRefreshingAuthClient gdriveAuthClient =
           await clientViaServiceAccount(accountCredentials, scopes);
-      log.e(_remote.remoteConfig.getString("GDRIVE"));
-      log.e(accountCredentials);
-      log.e(gdriveAuthClient);
-      log.e(note.GDriveID);
-      log.e(note.GDriveLink);
-      log.e(note.GDriveNotesFolderID);
       var drive = ga.DriveApi(gdriveAuthClient);
-      log.e(note.GDriveNotesFolderID);
       String fileID = note.GDriveID;
-      log.e(note.GDriveNotesFolderID);
 
       //*Download file
       ga.Media file = await drive.files
           .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-      log.e(note.GDriveNotesFolderID);
 
       //*Figure out size from note.size property to show proper loading indicator
       double contentLength =
@@ -369,58 +371,89 @@ class GoogleDriveService {
       {Note note,
       Function(String, String) onDownloadedCallback,
       Function startDownload}) async {
-    PermissionStatus status = await Permission.storage.request();
-    log.e(status.isGranted);
+    try {
+      
+      // PermissionStatus status = await Permission.storage.request();
+      // log.e(status.isGranted);
+      log.e("Downloading purchased pdf");
+      startDownload();
 
-    startDownload();
+      //*Google Drive Set Up
+      dynamic jsonKey = kIsWeb
+      ? dotenv.env['GDRIVE']
+      : _remote.remoteConfig.getString("GDRIVE");
+      final accountCredentials = new ServiceAccountCredentials.fromJson(jsonKey);
+      final scopes = ['https://www.googleapis.com/auth/drive'];
+      AutoRefreshingAuthClient gdriveAuthClient =
+          await clientViaServiceAccount(accountCredentials, scopes);
+      var drive = ga.DriveApi(gdriveAuthClient);
+      log.e(drive);
+      //*Download file
+      String fileID = note.GDriveID;
+      ga.Media file = await drive.files
+          .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
+      log.e("got file");
+      log.e(file);
+      var dir = 
+      kIsWeb
+      ? ""
+      : await ExtStorage.getExternalStoragePublicDirectory(
+          ExtStorage.DIRECTORY_DOWNLOADS);
 
-    //*Google Drive Set Up
-    final accountCredentials = new ServiceAccountCredentials.fromJson(
-        _remote.remoteConfig.getString("GDRIVE"));
-    final scopes = ['https://www.googleapis.com/auth/drive'];
-    AutoRefreshingAuthClient gdriveAuthClient =
-        await clientViaServiceAccount(accountCredentials, scopes);
-    var drive = ga.DriveApi(gdriveAuthClient);
-    //*Download file
-    String fileID = note.GDriveID;
-    ga.Media file = await drive.files
-        .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-    var dir = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DOWNLOADS);
-
-    String fileName = "${note.subjectName}_${note.title}.pdf";
-    String filePath = dir + fileName;
-
-    //*Figure out size from note.size property to show proper loading indicator
-    File localFile;
-    double contentLength = double.parse(note.size.split(" ")[0]);
-    contentLength = note.size.split(" ")[1] == 'KB'
-        ? contentLength * 1000
-        : contentLength * 1000000;
-    log.e("Size in numbers : " + contentLength.toString());
-    int downloadedLength = 0;
-    downloadProgress.value = 0;
-    List<int> dataStore = [];
-
-    //*Start the download
-    file.stream.listen((data) {
-      downloadedLength += data.length;
-      downloadProgress.value = (downloadedLength / contentLength) * 100;
-      log.e(downloadedLength);
-      log.e(contentLength);
-      print("loading.. : " + downloadProgress.value.toString());
-      // if(downloadProgress.value < 1)
-      // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
-      dataStore.insertAll(dataStore.length, data);
-    }, onDone: () async {
-      // EasyLoading.dismiss();
-      localFile = File(filePath);
-      await localFile.writeAsBytes(dataStore);
-      await Future.delayed(Duration(seconds: 1));
+      String fileName = "${note.subjectName}_${note.title}.pdf";
+      String filePath = dir + fileName;
+      log.e(filePath);
+      //*Figure out size from note.size property to show proper loading indicator
+      File localFile;
+      double contentLength = double.parse(note.size.split(" ")[0]);
+      contentLength = note.size.split(" ")[1] == 'KB'
+          ? contentLength * 1000
+          : contentLength * 1000000;
+      log.e("Size in numbers : " + contentLength.toString());
+      int downloadedLength = 0;
       downloadProgress.value = 0;
-      onDownloadedCallback(localFile.path, fileName);
-      log.e("DOWNLOAD DONE");
-    });
+      List<int> dataStore = [];
+
+      //*Start the download
+      file.stream.listen((data) {
+        downloadedLength += data.length;
+        downloadProgress.value = (downloadedLength / contentLength) * 100;
+        log.e(downloadedLength);
+        log.e(contentLength);
+        print("loading.. : " + downloadProgress.value.toString());
+        // if(downloadProgress.value < 1)
+        // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
+        dataStore.insertAll(dataStore.length, data);
+      }, onDone: () async {
+        // EasyLoading.dismiss();
+        log.e("DOWNLOAD DONE");
+        if(kIsWeb){
+          //FIXME WEB
+          //code to try to open the pdf in pdf viewer is kinda hard on web
+
+          //code to download to PC
+          final content = base64Encode(dataStore);
+          final anchor = dartHtml.AnchorElement(
+              href: "data:application/octet-stream;charset=utf-16le;base64,$content")
+            ..setAttribute("download", "$fileName.pdf")
+            ..click()
+            ..remove();
+        }else{
+          localFile = File(filePath);
+          await localFile.writeAsBytes(dataStore);
+        }
+        
+        log.e(localFile);
+        await Future.delayed(Duration(seconds: 1));
+        downloadProgress.value = 0;
+        onDownloadedCallback(localFile?.path ?? "", fileName);
+        log.e("DOWNLOAD DONE");
+      });
+
+    } catch (e) {
+      log.e("out of execution");
+      log.e(e.toString());
+    }
   }
 
   Future<Subject> createSubjectFolders(Subject subject) async {
@@ -434,7 +467,9 @@ class GoogleDriveService {
         ga.File()
           ..name = subject.name
           ..parents = [
-            _remoteConfigService.remoteConfig.getString("ROOT_FOLDER_GDRIVE")
+            kIsWeb
+            ? dotenv.env["ROOT_FOLDER_GDRIVE"]
+            : _remoteConfigService.remoteConfig.getString("ROOT_FOLDER_GDRIVE")
           ] // Optional if you want to create subfolder
           ..mimeType =
               'application/vnd.google-apps.folder', // this defines its folder

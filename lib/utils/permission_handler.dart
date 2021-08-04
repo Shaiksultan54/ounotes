@@ -3,10 +3,19 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 class PermissionHandler {
   Future<bool> askPermission() async {
+
+    if(kIsWeb){return true;}
+
+
+    print("*****************************************");
+    // log.e("dlfjslkjdf");
+    // log.e(kIsWeb);
+
     DialogService _dialogService = locator<DialogService>();
     SharedPreferencesService _preferencesService =
         locator<SharedPreferencesService>();

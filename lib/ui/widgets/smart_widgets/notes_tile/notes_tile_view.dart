@@ -1,18 +1,18 @@
-import 'package:FSOUNotes/misc/constants.dart';
+import 'dart:math' as math;
+
+import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
-import 'dart:math' as math;
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
 import 'package:flutter/material.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 
 class NotesTileView extends StatelessWidget {
   final Note note;
@@ -308,27 +308,27 @@ class NotesColumnWidget extends StatelessWidget {
                   SizedBox(
                     height: 15,
                   ),
-                    Container(
-                      width: wp * 0.6,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          model.openDoc(note);
-                        },
-                        child: Text(
-                          "Open",
-                          style: Theme.of(context)
-                              .textTheme
-                              .button
-                              .copyWith(color: Colors.white),
+                  Container(
+                    width: wp * 0.6,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
+                      onPressed: () {
+                        model.openDoc(note);
+                      },
+                      child: Text(
+                        "Open",
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            .copyWith(color: Colors.white),
+                      ),
                     ),
+                  ),
                 ],
               ),
             )

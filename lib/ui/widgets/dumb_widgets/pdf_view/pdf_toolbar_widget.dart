@@ -1,11 +1,10 @@
-
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_error_dialog.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_toolbar_item_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_core/src/theme/pdfviewer_theme.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 /// Signature for [Toolbar.onTap] callback.
 typedef TapCallback = void Function(Object item);
@@ -223,8 +222,7 @@ class ToolbarState extends State<Toolbar> {
                           Share.share(
                               "Notes Name: ${widget.doc.title}\n\nSubject Name: ${widget.doc.subjectName}\n\nLink:${widget.doc.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
                               sharePositionOrigin:
-                                  box.localToGlobal(Offset.zero) & box.size
-                          );
+                                  box.localToGlobal(Offset.zero) & box.size);
                         },
                         tooltip: widget.showTooltip ? 'Search' : null,
                       ),

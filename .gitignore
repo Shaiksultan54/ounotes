@@ -30,13 +30,11 @@
 .pub-cache/
 .pub/
 /build/
-/web/index.html
 
 
 # Web related
 lib/generated_plugin_registrant.dart
 web/config.js
-web/index.html
 
 # Symbolication related
 app.*.symbols
@@ -62,3 +60,5 @@ app.*.map.json
 functions/
 .firebaserc
 firebase.json
+/web/firebase-messaging-sw.js
+/web/index.html
