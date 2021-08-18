@@ -43,6 +43,9 @@ dependencies:
   animated_theme_switcher: ^2.0.1
   confetti: ^0.6.0-nullsafety
   feature_discovery: ^0.14.0
+  #web specific packages
+  responsive_builder: ^0.4.1
+  hovering: ^1.0.4
 
   # Utility Packages [ packages to perform a simple task ]
   cuid: ^0.1.2
