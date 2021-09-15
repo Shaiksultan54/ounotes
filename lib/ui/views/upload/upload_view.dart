@@ -13,15 +13,7 @@ import 'package:stacked/stacked.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class UploadView extends StatefulWidget {
-  final Map textFieldsMap;
-  //used to know whether user selected notes,syllabus,question paper or  links after opening upload selection view
-  final Document path;
-  final String subjectName;
-  //used to know whether user opened uploadview from inside document view or from drawer
-  final Document path2;
-  UploadView(
-      {this.textFieldsMap, @required this.subjectName, this.path, this.path2});
-
+  UploadView();
   @override
   _UploadViewState createState() => _UploadViewState();
 }
@@ -39,11 +31,11 @@ class _UploadViewState extends State<UploadView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<UploadViewModel>.reactive(
       onModelReady: (model) {
-        model.initialise(widget.path);
-        print(widget.path);
-        if (widget.subjectName != null) {
-          controllerOfSub.text = widget.subjectName;
-        }
+        // model.initialise(widget.path);
+        // print(widget.path);
+        // if (widget.subjectName != null) {
+        //   controllerOfSub.text = widget.subjectName;
+        // }
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
@@ -118,7 +110,7 @@ class _UploadViewState extends State<UploadView> {
                             child: SingleChildScrollView(
                               physics: AlwaysScrollableScrollPhysics(),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 40.0,
+                                horizontal: 100.0,
                                 vertical: 80.0,
                               ),
                               child: Column(
@@ -135,17 +127,38 @@ class _UploadViewState extends State<UploadView> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
+                                  Column(
+                                    children: model.uploadType
+                                        .map(
+                                          (val) => RadioListTile(
+                                            title: Text(
+                                              "$val",
+                                              style: Constants.kLabelStyle,
+                                            ),
+                                            groupValue: model.document,
+                                            value: val,
+                                            onChanged: (val) {
+                                              model.onUploadTypeChanged(val);
+                                            },
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  subjectNameField(model),
                                   SizedBox(height: 50.0),
-                                  if (widget.textFieldsMap !=
-                                      Constants.GDRIVELink)
-                                    subjectNameField(model),
-                                  widget.textFieldsMap == Constants.Syllabus
-                                      ? buildSyllabusEntries(model)
-                                      : widget.textFieldsMap ==
-                                              Constants.QuestionPaper
-                                          ? buildQuestionPaperEntries(model)
-                                          : buildLinkAndNotesEntries(
-                                              model, widget.textFieldsMap),
+                                  // if (widget.textFieldsMap !=
+                                  //     Constants.GDRIVELink)
+                                  //   subjectNameField(model),
+                                  // widget.textFieldsMap == Constants.Syllabus
+                                  //     ? buildSyllabusEntries(model)
+                                  //     : widget.textFieldsMap ==
+                                  //             Constants.QuestionPaper
+                                  //         ? buildQuestionPaperEntries(model)
+                                  //         : buildLinkAndNotesEntries(
+                                  //             model, widget.textFieldsMap),
                                   SizedBox(
                                     height: 20,
                                   ),
@@ -412,27 +425,27 @@ class _UploadViewState extends State<UploadView> {
               ],
             ),
           ),
-        if (textFieldsMap != Constants.GDRIVELink)
-          TextFieldView(
-              heading: widget.textFieldsMap["TextFieldHeading1"],
-              labelText: widget.textFieldsMap["TextFieldHeadingLabel1"],
-              textFieldController: textFieldController1),
-        SizedBox(
-          height: 30.0,
-        ),
-        if (widget.textFieldsMap["TextFieldHeading2"] != null)
-          TextFieldView(
-              heading: widget.textFieldsMap["TextFieldHeading2"],
-              labelText: widget.textFieldsMap["TextFieldHeadingLabel2"],
-              textFieldController: textFieldController2),
-        SizedBox(
-          height: 30.0,
-        ),
-        if (widget.textFieldsMap["TextFieldHeading3"] != null)
-          TextFieldView(
-              heading: widget.textFieldsMap["TextFieldHeading3"],
-              labelText: widget.textFieldsMap["TextFieldHeadingLabel3"],
-              textFieldController: textFieldController3),
+        // if (textFieldsMap != Constants.GDRIVELink)
+        //   TextFieldView(
+        //       heading: widget.textFieldsMap["TextFieldHeading1"],
+        //       labelText: widget.textFieldsMap["TextFieldHeadingLabel1"],
+        //       textFieldController: textFieldController1),
+        // SizedBox(
+        //   height: 30.0,
+        // ),
+        // if (widget.textFieldsMap["TextFieldHeading2"] != null)
+        //   TextFieldView(
+        //       heading: widget.textFieldsMap["TextFieldHeading2"],
+        //       labelText: widget.textFieldsMap["TextFieldHeadingLabel2"],
+        //       textFieldController: textFieldController2),
+        // SizedBox(
+        //   height: 30.0,
+        // ),
+        // if (widget.textFieldsMap["TextFieldHeading3"] != null)
+        //   TextFieldView(
+        //       heading: widget.textFieldsMap["TextFieldHeading3"],
+        //       labelText: widget.textFieldsMap["TextFieldHeadingLabel3"],
+        //       textFieldController: textFieldController3),
         if (textFieldsMap == Constants.Notes)
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -475,131 +488,110 @@ class _UploadViewState extends State<UploadView> {
 
   Widget uploadButtonWidget(UploadViewModel model) {
     return Column(children: [
-      if (widget.textFieldsMap != Constants.GDRIVELink)
-        Row(
-          children: [
-            Container(
-              child: Checkbox(
-                value: model.canUseUploaderUserName,
-                onChanged: model.changeCheckMark2,
-                activeColor: Colors.amber,
-              ),
-            ),
-            //TODO malik add dummy string here
-            Flexible(
-              child: Text(
-                "Hey, ${model.user.username}...can we show your name as uploader below this note?",
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-            )
-          ],
-        ),
-      SizedBox(
-        height: 10,
-      ),
-      Row(
-        children: <Widget>[
-          Container(
-            child: Checkbox(
-              value: model.isTermsAndConditionsChecked,
-              onChanged: model.changeCheckMark,
-              activeColor: Colors.amber,
-            ),
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(
-                    'I agree to OU Notes ',
-                    style: TextStyle(color: Colors.white, fontSize: 15),
-                  ),
-                  Container(
-                    height: 20,
-                    child: TextButton(
-                      onPressed: () {
-                        model.navigatetoPrivacyPolicy();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(0),
-                      ),
-                      child: Text(
-                        "Privacy policy",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'and  ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                    ),
-                  ),
-                  Container(
-                    height: 20,
-                    child: TextButton(
-                      onPressed: () {
-                        model.navigateToTermsAndConditionView();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(0),
-                      ),
-                      child: Text(
-                        'Terms and condition',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          )
-        ],
-      ),
+      // Row(
+      //   children: <Widget>[
+      //     Container(
+      //       child: Checkbox(
+      //         value: model.isTermsAndConditionsChecked,
+      //         onChanged: model.changeCheckMark,
+      //         activeColor: Colors.amber,
+      //       ),
+      //     ),
+      //     SizedBox(
+      //       width: 5,
+      //     ),
+      //     Column(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: <Widget>[
+      //         Row(
+      //           children: <Widget>[
+      //             Text(
+      //               'I agree to OU Notes ',
+      //               style: TextStyle(color: Colors.white, fontSize: 15),
+      //             ),
+      //             Container(
+      //               height: 20,
+      //               child: TextButton(
+      //                 onPressed: () {
+      //                   model.navigatetoPrivacyPolicy();
+      //                 },
+      //                 style: TextButton.styleFrom(
+      //                   padding: EdgeInsets.all(0),
+      //                 ),
+      //                 child: Text(
+      //                   "Privacy policy",
+      //                   style: TextStyle(
+      //                       color: Colors.white,
+      //                       fontSize: 14,
+      //                       fontWeight: FontWeight.bold),
+      //                 ),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //         Row(
+      //           mainAxisSize: MainAxisSize.min,
+      //           children: <Widget>[
+      //             Text(
+      //               'and  ',
+      //               style: TextStyle(
+      //                 color: Colors.white,
+      //                 fontSize: 15,
+      //               ),
+      //             ),
+      //             Container(
+      //               height: 20,
+      //               child: TextButton(
+      //                 onPressed: () {
+      //                   model.navigateToTermsAndConditionView();
+      //                 },
+      //                 style: TextButton.styleFrom(
+      //                   padding: EdgeInsets.all(0),
+      //                 ),
+      //                 child: Text(
+      //                   'Terms and condition',
+      //                   style: TextStyle(
+      //                       color: Colors.white,
+      //                       fontSize: 15,
+      //                       fontWeight: FontWeight.bold),
+      //                 ),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ],
+      //     )
+      //   ],
+      // ),
       SizedBox(
         height: 10,
       ),
       SaveButtonView(
+        text: "Upload",
         onTap: () async {
           if (!_formKey.currentState.validate()) {
             // Invalid!
             return;
           }
-          if (!model.isTermsAndConditionsChecked) {
-            Fluttertoast.showToast(
-                msg: "Please tick the box to Agree Terms and conditions ");
-            return;
-          }
+          // if (!model.isTermsAndConditionsChecked) {
+          //   Fluttertoast.showToast(
+          //       msg: "Please tick the box to Agree Terms and conditions ");
+          //   return;
+          // }
           //Here I have access to all TextFieldControllers therfore
           //I can extract the text and perform my upload logic
-          model.typeofyear == CourseInfo.yeartype[0]
-              ? model.setYear = controllerOfYear.text
-              : model.setYear =
-                  controllerOfYear.text + '-' + controllerOfYear2.text;
-          await model.handleUpload(
-            textFieldController1.text,
-            textFieldController2.text,
-            textFieldController3.text,
-            widget.path,
-            controllerOfSub.text,
-            context,
-          );
+          // model.typeofyear == CourseInfo.yeartype[0]
+          //     ? model.setYear = controllerOfYear.text
+          //     : model.setYear =
+          //         controllerOfYear.text + '-' + controllerOfYear2.text;
+          // await model.handleUpload(
+          //   textFieldController1.text,
+          //   textFieldController2.text,
+          //   textFieldController3.text,
+          //   widget.path,
+          //   controllerOfSub.text,
+          //   context,
+          // );
         },
       ),
     ]);

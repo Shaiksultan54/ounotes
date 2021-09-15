@@ -3,6 +3,8 @@ import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:connection_verify/connection_verify.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
@@ -45,7 +47,7 @@ class SplashViewModel extends FutureViewModel {
       // if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
       // else _navigationService.replaceWith(Routes.homeView);
       _navigationService.navigateToView(
-        MainView(),
+        UploadView(),
       );
     } else {
       log.e("user is null");

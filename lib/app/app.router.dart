@@ -286,14 +286,8 @@ class StackedRouter extends RouterBase {
       );
     },
     UploadView: (data) {
-      var args = data.getArgs<UploadViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => UploadView(
-          textFieldsMap: args.textFieldsMap,
-          subjectName: args.subjectName,
-          path: args.path,
-          path2: args.path2,
-        ),
+        builder: (context) => UploadView(),
         settings: data,
       );
     },

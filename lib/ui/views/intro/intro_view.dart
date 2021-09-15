@@ -2,7 +2,6 @@ import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/Intro/intro_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/selection_card.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -69,11 +68,11 @@ class _IntroViewState extends State<IntroView> {
                     alignment: Alignment.topCenter,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 50,
+                        vertical: 100,
                         horizontal: 20,
                       ),
                       child: Text(
-                        "Welcome To OUNotes",
+                        "Hello OU Notes Uploaders",
                         style: theme.textTheme.headline6.copyWith(
                           fontSize: 25,
                           //  color: theme.primaryColor,
@@ -83,12 +82,12 @@ class _IntroViewState extends State<IntroView> {
                     ),
                   ),
                   Positioned(
-                    top: 50,
-                    left: App(context).appWidth(0.2),
-                    right: App(context).appWidth(0.2),
+                    top: 100,
+                    left: App(context).appWidth(0.4),
+                    right: App(context).appWidth(0.4),
                     child: Container(
-                      height: App(context).appHeight(0.3),
-                      width: App(context).appWidth(0.2),
+                      height: 200,
+                      width: 100,
                       child: Lottie.asset(
                         'assets/lottie/intro_book.json',
                         fit: BoxFit.fill,
@@ -103,25 +102,25 @@ class _IntroViewState extends State<IntroView> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        SelectionCard(
-                          value: model.sem,
-                          onChange: model.changedDropDownItemOfSemester,
-                          items: model.dropdownofsem,
-                          title: "Select Semester",
-                        ),
-                        SelectionCard(
-                          value: model.br,
-                          onChange: model.changedDropDownItemOfBranch,
-                          items: model.dropdownofbr,
-                          title: "Select Branch",
-                        ),
-                        SelectionCard(
-                          value: model.clg,
-                          onChange: model.changedDropDownItemOfCollege,
-                          items: model.dropdownofclg,
-                          title: "Select College",
-                          isExpanded: true,
-                        ),
+                        // SelectionCard(
+                        //   value: model.sem,
+                        //   onChange: model.changedDropDownItemOfSemester,
+                        //   items: model.dropdownofsem,
+                        //   title: "Select Semester",
+                        // ),
+                        // SelectionCard(
+                        //   value: model.br,
+                        //   onChange: model.changedDropDownItemOfBranch,
+                        //   items: model.dropdownofbr,
+                        //   title: "Select Branch",
+                        // ),
+                        // SelectionCard(
+                        //   value: model.clg,
+                        //   onChange: model.changedDropDownItemOfCollege,
+                        //   items: model.dropdownofclg,
+                        //   title: "Select College",
+                        //   isExpanded: true,
+                        // ),
                         FittedBox(
                           child: Container(
                             margin: const EdgeInsets.symmetric(

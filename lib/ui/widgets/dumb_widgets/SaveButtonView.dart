@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 class SaveButtonView extends StatelessWidget {
   final Function onTap;
   final String text;
-  SaveButtonView({this.onTap,this.text});
+  SaveButtonView({this.onTap, this.text});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () => onTap(),
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+      width: 300,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.all(15.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          primary: Colors.white,
+          elevation: 5.0,
         ),
-        color: Colors.white,
+        onPressed: () => onTap(),
         child: Text(
           text ?? 'NEXT',
           style: TextStyle(

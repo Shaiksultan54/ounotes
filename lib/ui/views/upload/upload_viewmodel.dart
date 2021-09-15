@@ -77,10 +77,20 @@ class UploadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  List<String> uploadType = [
+    Constants.notes,
+    Constants.questionPapers,
+    Constants.syllabus,
+    Constants.links
+  ];
+
+  
+
   User _user = User();
   User get user => _user;
-  String _document;
+  String _document = Constants.notes;
   String get document => _document;
+  List<String> get uploadTypes => uploadType;
   String get typeofyear => _selectedyeartype;
   String get sem => _selectedSemester;
   String get br => _selectedBranch;
@@ -92,7 +102,7 @@ class UploadViewModel extends BaseViewModel {
   //     _dialogService.showDialog(
   //         title: "ERROR", description: "Select Valid Date Please");
   //     return;
-  //   }
+  //
   //   _year = date.year;
   //   notifyListeners();
   // }
@@ -108,9 +118,13 @@ class UploadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  onUploadTypeChanged(String val) {
+    _document = val;
+    notifyListeners();
+  }
+
   List<String> getSuggestions(String query) {
     List<String> subList = getAllSubjectsList();
-    log.e(subList);
     final List<String> suggestions = query.isEmpty
         ? []
         : subList
@@ -144,7 +158,7 @@ class UploadViewModel extends BaseViewModel {
     _selectedSemester = _dropDownMenuItemsofsemester[0].value;
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
     _selectedyeartype = _dropDownMenuItemForTypeYear[0].value;
-    _document = Constants.getDocumentNameFromEnum(path??Document.GDRIVE);
+    _document = Constants.getDocumentNameFromEnum(path ?? Document.GDRIVE);
     await setUser();
     notifyListeners();
   }

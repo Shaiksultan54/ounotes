@@ -1,7 +1,6 @@
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
 class SelectionCard extends StatefulWidget {
   final String value;
@@ -67,18 +66,18 @@ class _SelectionCardState extends State<SelectionCard> {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    showMaterialScrollPicker(
-                      context: context,
-                      title: widget.title,
-                      items: widget.items,
-                      onChanged: widget.onChange,
-                      selectedValue: widget.value,
-                      showDivider: false,
-                      maxLongSide: MediaQuery.of(context).size.height * 0.7,
-                      cancelText: "",
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                    );
+                    // showMaterialScrollPicker(
+                    //   context: context,
+                    //   title: widget.title,
+                    //   items: widget.items,
+                    //   onChanged: widget.onChange,
+                    //   selectedValue: widget.value,
+                    //   showDivider: false,
+                    //   maxLongSide: MediaQuery.of(context).size.height * 0.7,
+                    //   cancelText: "",
+                    //   backgroundColor:
+                    //       Theme.of(context).scaffoldBackgroundColor,
+                    // );
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,

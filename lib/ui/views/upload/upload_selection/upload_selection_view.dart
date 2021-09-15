@@ -45,7 +45,7 @@ class UploadSelectionView extends StatelessWidget {
                         child: SingleChildScrollView(
                           physics: AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.symmetric(
-                            horizontal: 40.0,
+                            horizontal: 20.0,
                             vertical: 10.0,
                           ),
                           child: Column(
@@ -87,10 +87,10 @@ class UploadSelectionView extends StatelessWidget {
                                 onTap: model.navigateToLinks,
                                 text: "LINKS",
                               ),
-                              SaveButtonView(
-                                onTap: model.navigateToGDRIVELinks,
-                                text: "GDRIVE LINK",
-                              ),
+                              // SaveButtonView(
+                              //   onTap: model.navigateToGDRIVELinks,
+                              //   text: "GDRIVE LINK",
+                              // ),
                             ],
                           ),
                         ),

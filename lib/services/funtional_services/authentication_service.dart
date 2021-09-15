@@ -78,7 +78,7 @@ class AuthenticationService {
     }
 
     //Get FCM Token
-    String fcmToken = await _pushNotificationService.fcm.getToken();
+    // String fcmToken = await _pushNotificationService.fcm.getToken();
 
     _user = new userModel.User(
       email: _firebaseUser.email,
@@ -90,7 +90,7 @@ class AuthenticationService {
       isAuth: true,
       photoUrl: _firebaseUser.photoURL,
       username: _firebaseUser.displayName,
-      fcmToken: fcmToken,
+      // fcmToken: fcmToken,
       // googleSignInAuthHeaders: await _googleUser.authHeaders,
     );
     if (isAdmin) {

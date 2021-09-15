@@ -66,28 +66,29 @@ class IntroViewModel extends BaseViewModel {
   }
 
   handleSignUp() async {
-    DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
-      title: "Are You Sure?",
-      description:
-          "Semester,Branch and College Name will be used to personalise this app",
-      cancelTitle: "GO BACK",
-      confirmationTitle: "PROCEED",
-    );
+    // DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
+    //   title: "Are You Sure?",
+    //   description:
+    //       "Semester,Branch and College Name will be used to personalise this app",
+    //   cancelTitle: "GO BACK",
+    //   confirmationTitle: "PROCEED",
+    // );
 
-    if (dialogResult.confirmed) {
-      setBusy(true);
-      bool result = await _authenticationService.handleSignIn(
-        college: _selectedCollege ?? "",
-        branch: _selectedBranch ?? "",
-        semeseter: _selectedSemester ?? "",
-      );
-      notifyListeners();
-      setBusy(false);
-      if (result) {
-        _navigationService.replaceWith(Routes.splashView);
-      } else {
-        Fluttertoast.showToast(msg: "An Error Occured,Please try again later");
-      }
+    setBusy(true);
+    bool result = await _authenticationService.handleSignIn(
+      college: _selectedCollege ?? "",
+      branch: _selectedBranch ?? "",
+      semeseter: _selectedSemester ?? "",
+    );
+    notifyListeners();
+    setBusy(false);
+    if (result) {
+      _navigationService.replaceWith(Routes.splashView);
+    } else {
+      Fluttertoast.showToast(msg: "An Error Occured,Please try again later");
     }
+    // if (dialogResult.confirmed) {
+
+    // }
   }
 }
